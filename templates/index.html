@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Survival Prediction</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <h1>Titanic Survival Prediction</h1>
+    <div class='form'>
+        <form action="{{ url_for('index') }}" method="POST">
+            {% if DataSet %}
+                {% for idx, value in DataSet.items() %}
+                    <!-- Radio buttons for Pclass, Sex, and Embarked -->
+                    {% if idx == 'Pclass' %}
+                        <label for="pclass">Passenger Class:</label>
+                        {% for i in range(value|length) %}
+                            <input type="radio" name="Pclass" value="{{ value[i] }}">
+                            <label for="pclass">{{ value[i] }}</label>
+                        {% endfor %}
+                        <br><br>
+                    {% elif idx == 'sex' %}
+                        <label for="sex">Gender:</label>
+                        {% for i in range(value|length) %}
+                            <input type="radio" name="sex" value="{{ value[i] }}">
+                            <label for="sex">{{ value[i] }}</label>
+                        {% endfor %}
+                        <br><br>
+                    {% elif idx == 'Embarked' %}
+                        <label for="embarked">Port of Embarkation:</label>
+                        {% for i in range(value|length) %}
+                            <input type="radio" name="Embarked" value="{{ value[i] }}">
+                            <label for="embarked">{{ value[i] }}</label>
+                        {% endfor %}
+                        <br><br>
+                    
+                    <!-- Dropdown menus for Family Size and Title -->
+                    {% elif idx == 'Family_size' %}
+                        <label for="family_size">Family Size:</label>
+                        <select id="family_size" name="Family_size">
+                            {% for i in range(value|length) %}
+                                <option value="{{ value[i] }}">{{ value[i] }}</option>
+                            {% endfor %}
+                        </select>
+                        <br><br>
+                    {% elif idx == 'Title' %}
+                        <label for="title">Title:</label>
+                        <select id="title" name="Title">
+                            {% for i in range(value|length) %}
+                                <option value="{{ value[i] }}">{{ value[i] }}</option>
+                            {% endfor %}
+                        </select>
+                        <br><br>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <h3>Data Not Found</h3>
+            {% endif %}
+            
+            <!-- Numeric fields for Age and Fare -->
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="1" max="80" placeholder="Enter age (e.g., 23)">
+            <br><br> 
+
+            <label for="fare">Fare:</label>
+            <input type="number" id="fare" name="fare" step="0.001" min="0" max="512.329200" placeholder="Enter fare (e.g., 512.32)">
+            <br><br>
+            
+            <!-- Submit button -->
+            <input type="submit" value="Submit">
+        </form>
+<br>
+        {% if output_data %}
+        <div class="output">
+            <!-- Iterate through each key-value pair in the output_data dictionary -->
+            {% for model, prediction in output_data.items() %}
+               {% if prediction == 1 %}
+               <span style="color: green;"><B style="color: rgb(32, 25, 25);">{{ model }}:</B> Survived</span>
+                {% elif prediction == 0 %}
+                <span style="color: red;"><B style="color: rgb(32, 25, 25);">{{ model }}:</B> Not survived</span>
+                {% else %}
+                    <p>Invalid Prediction</p>
+                 <!-- Fallback in case output is unexpected -->
+                {% endif %}
+            <br> <br>    
+            {% endfor %}
+        </div>
+    {% else %}
+       <p></p>
+    {% endif %}
+    </div>
+</body>
+</html>
